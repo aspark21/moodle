@@ -75,8 +75,8 @@ class mod_lti_mod_form extends moodleform_mod {
         $mform->setAdvanced('introeditor');
 
         // Display the label to the right of the checkbox so it looks better & matches rest of the form.
-        $coursedesc = $mform->getElement('showdescription');
-        if (!empty($coursedesc)) {
+        if ($mform->elementExists('showdescription')) {
+            $coursedesc = $mform->getElement('showdescription');
             $coursedesc->setText(' ' . $coursedesc->getLabel());
             $coursedesc->setLabel('&nbsp');
         }
