@@ -43,7 +43,10 @@ This is currently a beta preview release and includes untested code.
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details: 
 http://www.gnu.org/copyleft/gpl.html
-Warning:
+
+Warning
+=======
+
 Coursework does not currently work any official Turnitin release due to the way it is has been coded. Do not install this on a production site that is using the latest release as it will result in a FATAL error. University of London are reviewing the effort required to rewrite. The plugin does not require Turnitin to work but if you wish to use Turnitin then a subscription from iParadigms is required. 
 The tailored version for the Moodle Direct V2 plugin is available here: https://github.com/aspark21/MoodleDirectV2/archive/Coursework.zip
  
@@ -60,7 +63,10 @@ Reliability
 University of London tests its developments on its own systems that run on a standard LAMP stack. Any issues resulting from running on other infrastructure is not supported. 
 Bug Reports:
 Please report bugs using the GitHub issues tab. When reporting a bug please outline the exact steps you took that resulted in the bug so it is easier to identify and potentially fix. 
+
 Defining roles
+===============
+
 Coursework allows institutions to define their permissions unique to their institution. If you wish for help setting these up please contact moodle@rvc.ac.uk 
 
 Configuration
