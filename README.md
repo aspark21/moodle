@@ -47,7 +47,7 @@ http://www.gnu.org/copyleft/gpl.html
 Warning
 =======
 
-Coursework does not currently work any official Turnitin release due to the way it is has been coded. Do not install this on a production site that is using the latest release as it will result in a FATAL error. University of London are reviewing the effort required to rewrite. The plugin does not require Turnitin to work but if you wish to use Turnitin then a subscription from iParadigms is required. 
+Coursework does not currently work with any official Turnitin release due to the way it is has been coded. Do not install this on a production site that is using the latest release as it will result in a FATAL error. University of London are reviewing the effort required to rewrite. The plugin does not require Turnitin to work but if you wish to use Turnitin then a subscription from iParadigms is required. 
 The tailored version for the Moodle Direct V2 plugin is available here: https://github.com/aspark21/MoodleDirectV2/archive/Coursework.zip
  
 Installation
