@@ -7,20 +7,33 @@ Special thanks to Plymouth University, Royal Veterinary College and London Schoo
 
 Current features include:
 
-•	Integration with Turnitin (V2 customized older version 2014012413)
-•	Use of Moodle’s core grading methods
-•	Blind Marking (Instructors do not know who they are marking)
-•	Blind Feedback (Students do not know who marked their submission)
-•	Bulk download of submissions
-•	Bulk upload of annotated files
-•	Bulk submission of grades through a grading worksheet
-•	Support for up to 3 markers
-•	Control over who sees feedback and grades at each stage
-•	Automatic marker allocation rules
-•	Group submissions
-•	Backup & Restore Support
-•	Duplication Support
-•	Import of markers allocation from CSV
+â€¢	Integration with Turnitin (V2 customized older version 2014012413)
+
+â€¢	Use of Moodleâ€™s core grading methods
+
+â€¢	Blind Marking (Instructors do not know who they are marking)
+
+â€¢	Blind Feedback (Students do not know who marked their submission)
+
+â€¢	Bulk download of submissions
+
+â€¢	Bulk upload of annotated files
+
+â€¢	Bulk submission of grades through a grading worksheet
+
+â€¢	Support for up to 3 markers
+
+â€¢	Control over who sees feedback and grades at each stage
+
+â€¢	Automatic marker allocation rules
+
+â€¢	Group submissions
+
+â€¢	Backup & Restore Support
+
+â€¢	Duplication Support
+
+â€¢	Import of markers allocation from CSV
 
 
 Release & Support
