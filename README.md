@@ -53,7 +53,7 @@ The tailored version for the Moodle Direct V2 plugin is available here: https://
 Installation
 ============
 
-This plugin comes as part of a set. You MUST install both the Coursework activity and the ULCC framework plugins for it to work. Place the contents of each plugin in their respective Moodle root folders:
+This plugin comes as part of a set. You MUST install both the Coursework activity and the ULCC framework (https://github.com/ULCC/open-local_ulcc_framework) plugins for it to work. Place the contents of each plugin in their respective Moodle root folders:
 mod/coursework 
 local/ulcc_framework
 
