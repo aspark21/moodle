@@ -1,0 +1,81 @@
+[submodule "mod/forumng"]
+	path = mod/forumng
+	url = git://github.com/moodleou/moodle-mod_forumng
+[submodule "mod/subpage"]
+	path = mod/subpage
+	url = git://github.com/moodleou/moodle-mod_subpage
+[submodule "mod/certificate"]
+	path = mod/certificate
+	url = git://github.com/markn86/moodle-mod_certificate
+[submodule "mod/lightboxgallery"]
+	path = mod/lightboxgallery
+	url = git://github.com/netspotau/moodle-mod_lightboxgallery
+[submodule "mod/bootstrapelements"]
+	path = mod/bootstrapelements
+	url = https://bitbucket.org/bcu/moodle-mod_bootstrapelements.git
+[submodule "mod/ouwiki"]
+	path = mod/ouwiki
+	url = git://github.com/moodleou/moodle-mod_ouwiki
+[submodule "mod/oublog"]
+	path = mod/oublog
+	url = git://github.com/moodleou/moodle-mod_oublog
+[submodule "mod/questionnaire"]
+	path = mod/questionnaire
+	url = git://github.com/remotelearner/moodle-mod_questionnaire
+[submodule "mod/choicegroup"]
+	path = mod/choicegroup
+	url = git://github.com/ndunand/moodle-mod_choicegroup.git
+[submodule "lib/editor/atto/plugins/htmlplus"]
+	path = lib/editor/atto/plugins/htmlplus
+	url = git://github.com/andrewnicols/moodle-atto_htmlplus.git
+[submodule "lib/editor/atto/plugins/fullscreen"]
+	path = lib/editor/atto/plugins/fullscreen
+	url = git://github.com/dthies/moodle-atto_fullscreen.git
+[submodule "lib/editor/atto/plugins/preview"]
+	path = lib/editor/atto/plugins/preview
+	url = git://github.com/dthies/moodle-atto_preview.git
+[submodule "lib/editor/atto/plugins/fontsize"]
+	path = lib/editor/atto/plugins/fontsize
+	url = git://github.com/andrewnicols/moodle-atto_fontsize.git
+[submodule "lib/editor/atto/plugins/fontfamily"]
+	path = lib/editor/atto/plugins/fontfamily
+	url = git://github.com/projectestac/moodle-atto_fontfamily
+[submodule "lib/editor/atto/plugins/bsgrid"]
+	path = lib/editor/atto/plugins/bsgrid
+	url = git://github.com/academic-moodle-cooperation/moodle-atto_bsgrid
+[submodule "lib/editor/atto/plugins/pastespecial"]
+	path = lib/editor/atto/plugins/pastespecial
+	url = git://github.com/jinhofer/pastespecial.git
+[submodule "local/analytics"]
+	path = local/analytics
+	url = git://github.com/DBezemer/moodle-local_analytics
+[submodule "local/ousearch"]
+	path = local/ousearch
+	url = git://github.com/moodleou/moodle-local_ousearch
+[submodule "course/format/topcoll"]
+	path = course/format/topcoll
+	url = git://github.com/gjb2048/moodle-format_topcoll
+[submodule "question/type/combined"]
+	path = question/type/combined
+	url = git://github.com/moodleou/moodle-qtype_combined
+[submodule "question/type/oumultiresponse"]
+	path = question/type/oumultiresponse
+	url = git://github.com/moodleou/moodle-qtype_oumultiresponse
+[submodule "question/type/pmatch"]
+	path = question/type/pmatch
+	url = git://github.com/moodleou/moodle-qtype_pmatch
+[submodule "question/type/varnumericset"]
+	path = question/type/varnumericset
+	url = git://github.com/moodleou/moodle-qtype_varnumericset
+[submodule "question/type/varnumeric"]
+	path = question/type/varnumeric
+	url = git://github.com/moodleou/moodle-qtype_varnumeric
+[submodule "blocks/course_contents"]
+	path = blocks/course_contents
+	url = git://github.com/mudrd8mz/moodle-block_course_contents
+[submodule "course/format/onetopic"]
+	path = course/format/onetopic
+	url = git://github.com/davidherney/moodle-format_onetopic
+[submodule "local/ltiprovider"]
+	path = local/ltiprovider
+	url = git://github.com/jleyva/moodle-local_ltiprovider
