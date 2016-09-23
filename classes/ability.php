@@ -610,7 +610,7 @@ class ability extends \local_ulcc_framework\ability {
             function (feedback $feedback) {
                 $this->set_message('Prerequisite stage has no feedback');
                 $stage = $feedback->get_stage();
-                return !$stage->prerequisite_stages_have_feedback($feedback->get_allocatable());
+                return !$stage->prerequisite_stages_have_feedback($feedback->get_allocatable()) && !is_siteadmin();
             });
     }
 

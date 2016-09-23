@@ -57,17 +57,25 @@ class student_submission_form extends moodleform {
 
         $this->add_hidden_elements_to_form();
 
-        $this->add_header_to_form();
+        // if TII plagiarism enabled check if user agreed/disagreed EULA
+        if(!$this->get_coursework()->plagiarism_enbled() || has_user_seen_tii_EULA_agreement()) {
 
-        $this->add_instructions_to_form();
+            $this->add_header_to_form();
 
-        $this->add_file_manager_to_form();
+            $this->add_instructions_to_form();
 
-        if ($this->students_are_required_to_agree_to_terms()) {
-            $this->add_agree_terms_elements_to_form();
+            $this->add_file_manager_to_form();
+
+            if ($this->students_are_required_to_agree_to_terms()) {
+                $this->add_agree_terms_elements_to_form();
+            }
+
+            $this->add_submit_buttons_to_form();
+        } else {
+            $plagdisclosure = plagiarism_similarity_information($this->get_coursework()->get_course_module());
+            $p = html_writer::tag('p', $plagdisclosure );
+            $this->_form->addElement('html', $p);
         }
-
-        $this->add_submit_buttons_to_form();
 
     }
 

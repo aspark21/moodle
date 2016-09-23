@@ -7,7 +7,7 @@ Special thanks to Plymouth University, Royal Veterinary College and London Schoo
 
 Current features include:
 
-•	Integration with Turnitin (V2 customized older version 2014012413)
+•	Integration with Turnitin plagiarism tool
 
 •	Use of Moodle’s core grading methods
 
@@ -43,6 +43,40 @@ This is currently a beta preview release and includes untested code.
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details: 
 http://www.gnu.org/copyleft/gpl.html
+
+
+Releases 
+=================
+
+**September 2016**
+
+* added compatibility with TII plugin - plagiarism_turnitin v2016091401
+* removed deprecated add_into_editor function to make it compatible with Moodle 3.1
+* changed Events handlers to use new Events 2 API (observers) - compatibility with Moodle 3.1
+
+
+**January 2016**
+
+New features:
+
+* delay agreed grade giving initial markers chance to edit their grades
+* import of markers allocation from CSV
+* addallocatedagreedgrade capability that allows a user to add agreed grade for submissions they marked in initial stage
+
+
+**November 2015**
+
+New features:
+
+* manual and automatic sampling (range and total rules)
+* auto agreement of agreed grade within percentage distance
+* download and upload of grading sheet
+* final grades download
+* bulk download and upload of annotated files
+* coursework backup & restore
+* coursework duplication
+* coursework notification message for released feedback
+
 
 Warning
 =======

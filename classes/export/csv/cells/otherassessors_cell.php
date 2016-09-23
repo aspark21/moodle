@@ -46,8 +46,15 @@ class otherassessors_cell extends cell_base{
 
             $grade = $submission->get_assessor_feedback_by_stage($feedback->stage_identifier);
             if ($grade){
-                $gradedata[] = $this->get_actual_grade($grade->grade);
-                $gradedata[] = strip_tags($grade->feedbackcomment);
+                $ability = new ability(user::find($USER), $this->coursework);
+                if (($ability->can('show', $feedback) && !$submission->any_editable_feedback_exists()) || is_siteadmin($USER->id)) {
+                    $gradedata[] = $this->get_actual_grade($grade->grade);
+                    $gradedata[] = strip_tags($grade->feedbackcomment);
+                } else {
+                    $gradedata[] = get_string('grade_hidden_manager', 'mod_coursework');
+                    $gradedata[] = '';
+                }
+
 
             } else {
                 $gradedata[] = '';

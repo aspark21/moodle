@@ -15,18 +15,32 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * coursework_deadline_changed
+ *
  * @package    mod
  * @subpackage coursework
- * @copyright  2011 University of London Computer Centre {@link ulcc.ac.uk}
+ * @copyright  2016 University of London Computer Centre {@link ulcc.ac.uk}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+namespace mod_coursework\event;
 
 defined('MOODLE_INTERNAL') || die();
 
 
-$plugin->component = 'mod_coursework';
-$plugin->version  = 2016090100;  // If version == 0 then module will not be installed
-$plugin->requires = 2010031900;  // Requires this Moodle version
-$plugin->cron     = 300;        // Period for cron to check this module (secs).
-$plugin->dependencies = array('local_ulcc_framework' => 2015020200);
+class coursework_deadline_changed extends \core\event\base {
 
+
+    /**
+     * Init method.
+     *
+     * @return void
+     */
+    protected function init() {
+
+        $this->data['crud'] = 'c';
+        $this->data['edulevel'] = self::LEVEL_TEACHING;
+        $this->data['objecttable'] = 'coursework';
+    }
+
+}

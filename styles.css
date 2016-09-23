@@ -473,3 +473,11 @@ table.grading-details th{
 #page-mod-coursework-mod #courseworkmodformfeedback .felement{
     margin-left:1em !important;
 }
+
+
+.plagiarism_tii_version{
+    background-color: #F6CECE;
+    border: 1px solid #cc0000;
+    color:#cc0000;
+    padding: 8px 35px 8px 14px;
+}

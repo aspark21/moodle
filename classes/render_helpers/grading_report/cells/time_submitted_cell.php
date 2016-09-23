@@ -73,7 +73,9 @@ class time_submitted_cell extends cell_base {
             }
 
             if ($submission->get_allocatable()->type() == 'group') {
-                $content .= ' by '.$submission->get_last_submitter()->profile_link();
+                if ($row_object->can_view_username() || $row_object->is_published()) {
+                    $content .= ' by ' . $submission->get_last_submitter()->profile_link();
+                }
             }
         } else {
 

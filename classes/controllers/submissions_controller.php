@@ -93,6 +93,7 @@ class submissions_controller extends controller_base {
         $submission->createdby = $USER->id;
         $submission->lastupdatedby = $USER->id;
         $submission->allocatabletype = $this->params['allocatabletype'];
+        $submission->authorid   = $submission->get_author_id(); //create new function to get the author id depending on whether the current user is submitting on behalf
         $submission->timesubmitted = time();
 
         // Automatically finalise any submissions that's past the deadline.

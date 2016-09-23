@@ -31,7 +31,7 @@ class cron {
         echo "Starting coursework cron functions...\n";
         self::finalise_any_submissions_where_the_deadline_has_passed();
         self::send_reminders_to_students();
-        self::send_first_reminders_to_admins();
+       // self::send_first_reminders_to_admins(); #90211934
         self::autorelease_feedbacks_where_the_release_date_has_passed();
         return true;
     }
@@ -104,6 +104,8 @@ class cron {
     private static function send_first_reminders_to_admins() {
 
         global $CFG, $DB;
+
+        require_once($CFG->dirroot.'/mod/coursework/lib.php');
 
         $timenow = time();
         $firstreminderdays = $CFG->coursework_day_reminder * 60 * 60 * 24;

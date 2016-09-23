@@ -35,7 +35,7 @@ class assessorgrade_cell extends cell_base{
             );
             $feedback = feedback::find($feedback_params);
 
-            if ($submission->get_agreed_grade() || $ability->can('show', $feedback) || is_siteadmin($USER->id)) {
+            if (($submission->get_agreed_grade() || $ability->can('show', $feedback)) || !$submission->any_editable_feedback_exists() || is_siteadmin($USER->id)) {
                 $grade = $this->get_actual_grade($grade->grade);
             } else {
                 $grade = get_string('grade_hidden_manager', 'mod_coursework');

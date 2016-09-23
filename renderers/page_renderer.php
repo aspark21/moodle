@@ -161,11 +161,17 @@ class mod_coursework_page_renderer extends plugin_renderer_base {
         // New bit - different page for new/edit.
         $ability = new ability($student, $coursework);
 
-        if ($ability->can('new', $submission)) {
+        $plagdisclosure = plagiarism_similarity_information($course_module);
+        $html   .= $plagdisclosure;
+
+        // if TII plagiarism enabled check if user agreed/disagreed EULA
+        $shouldseeEULA = has_user_seen_tii_EULA_agreement();
+
+        if ($ability->can('new', $submission) && (!$coursework->tii_enabled() || $shouldseeEULA)) {
             if ($coursework->start_date_has_passed()) {
                 $html .= $this->new_submission_button($submission);
             } else {
-                $html .= '<div class="alert">' . get_string('notstartedyet', 'mod_coursework', userdate($coursework->startdate)).'</div>';
+                $html .= '<div class="alert">' . get_string('notstartedyet', 'mod_coursework', userdate($coursework->startdate)) . '</div>';
             }
         } else if ($submission && $ability->can('edit', $submission)) {
             $html .= $this->edit_submission_button($coursework, $submission);
@@ -176,12 +182,8 @@ class mod_coursework_page_renderer extends plugin_renderer_base {
         }
 
         if ($submission && $submission->is_published()) {
-
             $html .= $this->existing_feedback_from_teachers($submission);
         }
-
-        // This comes last so that it is below the files and therefore under the 'Your files' header.
-        $html .= $this->plagiarism_similarity_information($submission, $course_module);
 
         return $html;
     }
@@ -703,28 +705,6 @@ class mod_coursework_page_renderer extends plugin_renderer_base {
 
     }
 
-    /**
-     * @param submission $submission
-     * @param $course_module
-     * @return string
-     */
-    protected function plagiarism_similarity_information($submission, $course_module) {
-
-        global $USER;
-
-        $ability = new ability(user::find($USER), $submission->get_coursework());
-        $ability->can('view_plagiarism', $this);
-
-        $html = '';
-
-        ob_start();
-        if ($ability->can('view_plagiarism', $this)) {
-            plagiarism_print_disclosure($course_module->id);
-        }
-        $html .= ob_get_clean();
-
-        return $html;
-    }
 
     /**
      * @param student_submission_form $submit_form
@@ -747,6 +727,7 @@ class mod_coursework_page_renderer extends plugin_renderer_base {
         if ($own_submission->get_coursework()->early_finalisation_allowed()) {
             $html .= $this->finalise_warning();
         }
+        $html .= plagiarism_similarity_information($own_submission->get_coursework()->get_course_module());
         ob_start();
         $submit_form->display();
         $html .= ob_get_clean();

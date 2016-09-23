@@ -59,26 +59,9 @@ class submission_cell extends cell_base {
                                                                      'createdby' => $USER->id,
                                                                  ));
 
-        // We cannot do this if Turnitin is enabled for this instance of the coursework module as the
-        // Turnitin plugin is a bit of a mess and goes wrong.
 
-        $turnitinenabled = false;
-        if ($CFG->enableplagiarism) {
-            $plagiarismsettings = (array)get_config('plagiarism');
-            if (!empty($plagiarismsettings['turnitin_use'])) {
-                $params = array(
-                    'cm' => $rowobject->get_course_module_id(),
-                    'name' => 'use_turnitin',
-                    'value' => 1
-                );
-                if ($DB->record_exists('plagiarism_turnitin_config', $params)) {
-                    $turnitinenabled = true;
-                }
-            }
-        }
-
-        if (!$turnitinenabled  && (($rowobject->get_submission()&& !$rowobject->get_submission()->finalised)
-            || !$rowobject->get_submission())) {
+        if (($rowobject->get_submission()&& !$rowobject->get_submission()->finalised)
+            || !$rowobject->get_submission()) {
 
             if ($ability->can('new', $submission_on_behalf_of_allocatable)) {
 

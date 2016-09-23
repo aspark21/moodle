@@ -64,6 +64,12 @@ class submission extends table_base implements \renderable {
     public $userid;
 
     /**
+     * @var int author (in the case of on behalf the person who the submission is being made for) #
+     * in the case of a submit on behalf of this is the person with the lowest user id number in the group
+     */
+    public $authorid;
+
+    /**
      * @var int unix timestamp
      */
     public $timecreated;
@@ -316,30 +322,23 @@ class submission extends table_base implements \renderable {
         $files = $fs->get_area_files($this->get_context_id(), 'mod_coursework', 'submission',
                                      $this->id, "id", false);
 
-        $event_data = new stdClass();
-        $event_data->modulename = 'coursework';
-        $event_data->cmid = $this->get_course_module_id();
-        $event_data->itemid = $this->id;
-        $event_data->courseid = $this->get_course_id();
-        $event_data->userid = $this->get_user_id_for_plagiarism();
-        $event_data->timeavailable = $this->get_coursework()->timecreated;
-        $event_data->timedue = $this->get_coursework()->get_user_deadline($this->get_user_id_for_plagiarism());
-        $event_data->feedbackavailable = $this->get_coursework()->get_individual_feedback_deadline();
-        if ($files) {
-            $event_data->pathnamehashes = array();
-            foreach ($files as $file) {
-                /* @var stored_file $file */
-                $event_data->pathnamehashes[] = $file->get_pathnamehash();
-            }
-            $event_data->files = $files;
-        }
-        // Keeping this (old way) in for backward compatibility with 2.2.
-        // N.b. Turnitin handles these two events in exactly the same way.
-        if ($type == 'final') {
-            events_trigger('assessable_files_done', $event_data);
-        } else {
-            events_trigger('assessable_file_uploaded', $event_data);
-        }
+
+        $params = array(
+            'context' => \context_module::instance($this->get_coursework()->get_course_module()->id),
+            'courseid' => $this->get_course_id(),
+            'objectid' => $this->id,
+            'other' => array(
+                'content' => '',
+                'pathnamehashes' => array_keys($files)
+            )
+        );
+
+
+
+        $event = \mod_coursework\event\assessable_uploaded::create($params);
+        //$event->set_legacy_files($files);
+        $event->trigger();
+
     }
 
     /**
@@ -628,8 +627,7 @@ class submission extends table_base implements \renderable {
         // Submitted with only some of the required grades in place.
         if ($this->finalised &&
             count($assessor_feedbacks) > 0 &&
-            (count($assessor_feedbacks) < $this->get_coursework()->numberofmarkers ||
-                ($maxfeedbacksreached && $this->editable_feedbacks_exist()))
+            (count($assessor_feedbacks) < $this->get_coursework()->numberofmarkers || $this->any_editable_feedback_exists())
         ) {
 
             return self::PARTIALLY_GRADED;
@@ -759,23 +757,59 @@ class submission extends table_base implements \renderable {
 
     }
 
-    /**
-     * Simple getter.
-     *
-     * @return int
+
+    /*
+     * As with the author id field this function was created to verify that coursework will work correctly with Turnitin
+     * Plagiarism plugin that requires the author of a submission to
      */
-    public function get_user_id_for_plagiarism() {
-        $id = 0;
-        if ($this->get_coursework()->is_configured_to_have_group_submissions()){
-            // get userid of the first member in the group
-            $members = groups_get_members($this->allocatableid, 'u.id', 'id');
-            if ($members) {
-                $id = reset($members)->id;
-            }
-        } else {
-            $id = $this->allocatableid;
+    public function get_author_id() {
+        global $USER;
+
+        $id = $USER->id;
+
+        //if this is a submission on behalf of the student and it is a group submission we have to make sure
+        // the author is the first member of the group
+
+            if ($this->is_submission_on_behalf()) {
+                if ( $this->get_coursework()->is_configured_to_have_group_submissions())   {
+                    $members = groups_get_members($this->allocatableid, 'u.id', 'id');
+                    if ($members) {
+                        $id = reset($members)->id;
+                    }
+
+                    if ($this->get_coursework()->plagiarism_enbled()) {
+                        $groupmember = $this->get_tii_group_member_with_eula($this->allocatableid);
+                        if (!empty($groupmember)) $id = $groupmember->id;
+                    }
+                } else {
+                    $id = $this->allocatableid;
+                }
         }
+
         return $id;
+    }
+
+    /**
+     * Returns the first group member of the given group who has accepted turnitin's user agreement
+     *
+     * @param $groupid
+     * @return array
+     */
+        public function get_tii_group_member_with_eula($groupid)   {
+
+        global  $DB;
+
+        $sql    =   "
+                SELECT  gm.userid as id
+                FROM 	{groups_members} gm,
+	                    {turnitintooltwo_users} tu
+                WHERE 	tu.userid = gm.userid
+                AND  	user_agreement_accepted != 0
+                AND 	gm.groupid =  ?
+                ORDER   BY  gm.userid
+                LIMIT   1";
+
+        return $DB->get_record_sql($sql,array($groupid));
     }
 
     /**
@@ -806,6 +840,10 @@ class submission extends table_base implements \renderable {
 
             case submission::PARTIALLY_GRADED:
                 $statustext = get_string('statuspartiallygraded', 'coursework');
+                if($this->any_editable_feedback_exists()){
+                    $statustext = get_string('statusfullygraded', 'coursework'). "<br>";
+                    $statustext .=  get_string('stilleditable', 'coursework');
+                }
                 break;
 
             case submission::FULLY_GRADED:
@@ -1140,7 +1178,7 @@ class submission extends table_base implements \renderable {
     private function is_submission_on_behalf(){
         global $USER;
 
-        if ($this->get_user_id_for_plagiarism() == $USER->id){
+        if (($this->allocatableid == $USER->id && $this->allocatabletype != 'group') || groups_is_member($this->allocatableid)){
             return false;
         } else {
             return true;
@@ -1275,5 +1313,31 @@ class submission extends table_base implements \renderable {
         $editablefeedbacks  =   $DB->get_records_sql($sql,array('submissionid'=>$this->id,'time'=>time()));
 
         return (empty($editablefeedbacks))  ?   false : $editablefeedbacks;
+    }
+
+
+/*
+ * Determines whether the current user is able to add a turnitin grademark to this submission
+ */
+    function can_add_tii_grademark()    {
+        $canadd =   false;
+
+        if ($this->get_coursework()->get_max_markers() == 1) {
+            $canadd     =     (has_any_capability(array('mod/coursework:addinitialgrade','mod/coursework:addministergrades'),$this->get_context()) && $this->ready_to_grade()) ;
+        } else {
+            $canadd     =     (has_any_capability(array('mod/coursework:addagreedgrade','mod/coursework:addallocatedagreedgrade','mod/coursework:addministergrades'),$this->get_context()) && $this->all_inital_graded()) ;
+        }
+
+        return  $canadd;
+    }
+
+    /**
+     * Determines if any editable feedback still exists
+     *
+     * @return bool
+     */
+    function any_editable_feedback_exists(){
+
+        return count($this->get_assessor_feedbacks()) >= $this->max_number_of_feedbacks() && $this->editable_feedbacks_exist();
     }
 }

@@ -2102,6 +2102,23 @@ function xmldb_coursework_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2015121401, 'coursework');
     }
 
+    if($oldversion < 2015121402) {
+        $fieldeditingtime = new xmldb_field('authorid', XMLDB_TYPE_INTEGER, '10', true, XMLDB_NOTNULL, null, '0', null);
+
+        $fieldeditingtime->setNotNull(true);
+
+        $table = new xmldb_table('coursework_submissions');
+
+
+        if (!$dbman->field_exists($table, $fieldeditingtime)) {
+            $dbman->add_field($table, $fieldeditingtime);
+        }
+
+        upgrade_mod_savepoint(true, 2015121402, 'coursework');
+    }
+
+
+
 
     // Always needs to return true.
     return true;

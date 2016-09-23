@@ -23,30 +23,31 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$handlers = array(
-    'role_assigned' => array(
-        'handlerfile' => '/mod/coursework/lib.php',
-        'handlerfunction' => 'coursework_role_assigned_event_handler',
-        'schedule' => 'instant'
+
+
+$observers = array(
+
+    array(
+        'eventname'   => '\core\event\role_assigned',
+        'callback'    => 'mod_coursework_observer::autoallocate_when_user_added',
     ),
-    'role_unassigned' => array(
-        'handlerfile' => '/mod/coursework/lib.php',
-        'handlerfunction' => 'coursework_role_unassigned_event_handler',
-        'schedule' => 'instant'
+    array(
+        'eventname'   => '\core\event\role_unassigned',
+        'callback'    => 'mod_coursework_observer::autoallocate_when_user_removed',
     ),
-    'coursework_deadline_changed' => array(
-        'handlerfile' => '/mod/coursework/lib.php',
-        'handlerfunction' => 'coursework_send_deadline_changed_emails',
+    array(
+        'eventname'   => '\mod_coursework\event\coursework_deadline_changed',
+        'callback'    => 'mod_coursework_observer::coursework_deadline_changed',
         'schedule' => 'cron'
     ),
-    'mod_updated' => array(
-        'handlerfile' => '/mod/coursework/lib.php',
-        'handlerfunction' => 'coursework_mod_updated',
-        'schedule' => 'instant'
+    array(
+        'eventname'   => '\core\event\course_module_updated',
+        'callback'    => 'mod_coursework_observer::process_allocation_after_update',
     ),
-    'mod_created' => array(
-        'handlerfile' => '/mod/coursework/lib.php',
-        'handlerfunction' => 'coursework_mod_updated',
-        'schedule' => 'instant'
-    )
+    array(
+        'eventname'   => '\core\event\course_module_created',
+        'callback'    => 'mod_coursework_observer::process_allocation_after_creation',
+    ),
 );
+
+

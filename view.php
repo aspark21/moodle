@@ -352,7 +352,7 @@ if ($can_view_students) {
 
         $params = array(
             'cm' => $course_module->id,
-            'userid' => $submission->get_user_id_for_plagiarism(),
+            'userid' => $submission->get_author_id(),
         );
         // Get the hash so we can retrieve the file and update timemodified.
         $filehash = $DB->get_field('plagiarism_turnitin_files', 'identifier', $params);

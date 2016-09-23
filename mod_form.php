@@ -48,7 +48,7 @@ class mod_coursework_mod_form extends moodleform_mod {
         $this->add_general_header();
 
         $this->add_name_field();
-        $this->add_intro_editor(true, get_string('description', 'coursework'));
+        $this->standard_intro_elements(get_string('description', 'coursework'));
 
 
         $this->add_availability_header();
@@ -372,6 +372,7 @@ class mod_coursework_mod_form extends moodleform_mod {
                                  array('placeholder' => 'e.g. doc, docx, txt, rtf'));
         $moodle_form->addHelpButton('filetypes', 'filetypes', 'mod_coursework');
         $moodle_form->setType('filetypes', PARAM_TEXT);
+        $moodle_form->disabledIf('filetypes', 'use_turnitin', 'eq', '1');
     }
 
     /**
@@ -383,7 +384,8 @@ class mod_coursework_mod_form extends moodleform_mod {
         $moodle_form =& $this->_form;
 
         $choices = get_max_upload_sizes($CFG->maxbytes, $COURSE->maxbytes);
-        $choices[0] = get_string('maximumupload') . ' (' . display_size($COURSE->maxbytes) . ')';
+        //$choices[0] = get_string('maximumupload') . ' (' . display_size($COURSE->maxbytes) . ')';
+        $choices[0] = get_string('maximumupload'). ' set in course';
         $moodle_form->addElement('select',
                                  'maxbytes',
                                  get_string('maximumsize', 'coursework'),
@@ -394,6 +396,7 @@ class mod_coursework_mod_form extends moodleform_mod {
                                  '',
                                  get_string('maximumsizelabel', 'coursework'));*/
         $moodle_form->addHelpButton('maxbytes','maximumsize','mod_coursework');
+        $moodle_form->disabledIf('maxbytes', 'use_turnitin', 'eq', '1');
 
         $moodle_form->closeHeaderBefore('submissiontype');
 
@@ -424,6 +427,7 @@ class mod_coursework_mod_form extends moodleform_mod {
         $moodle_form->setDefault('maxfiles', 1);
         $moodle_form->setType('maxfiles', PARAM_INT);
         $moodle_form->addHelpButton('maxfiles','maxfiles','mod_coursework');
+        $moodle_form->disabledIf('maxfiles', 'use_turnitin', 'eq', '1');
 
     }
 
@@ -676,36 +680,20 @@ class mod_coursework_mod_form extends moodleform_mod {
         $moodle_form =& $this->_form;
 
         $course_context = context_course::instance($COURSE->id);
+        $version_required = '2016091401'; // version of plagiarism_turnitin modified for courseowrk
+        $plagiarismsettings = (array)get_config('plagiarism');
 
-        // We need a warning that if group submissions is enabled, only the person who submitted the file
-        // and the teacher will be able to see the turnitin score
-        $turnitinenabled = false;
-        if ($CFG->enableplagiarism) {
-            $plagiarismsettings = (array)get_config('plagiarism');
-            if (!empty($plagiarismsettings['turnitin_use'])) {
-                $turnitinenabled = true;
+        // if plagiarism enabled and modified version of plagiarism installed
+        if (!empty($CFG->enableplagiarism) && !empty($plagiarismsettings['turnitin_use'])) {
+            if (get_config('plagiarism_turnitin', 'version') >= $version_required) {
+                plagiarism_get_form_elements_module($moodle_form, $course_context, 'mod_coursework');
+
+            } else {
+                $moodle_form->addElement('header', 'plugin_header', get_string('turnitinpluginsettings', 'plagiarism_turnitin'));
+                $moodle_form->addElement('html', '<div class ="plagiarism_tii_version">' .
+                    get_string('tii_plagiarism_version_warning', 'mod_coursework', $version_required) . '</div>');
             }
         }
-        if ($turnitinenabled) {
-            $moodle_form->addElement('static',
-                                     'turnitin_group_warning',
-                                     'Turnitin warning',
-                                     '<div class="alert">Turnintin will not allow the students to see the similarity reports for a group submission, so that option is disabled below when groups are in use.</div>'
-            );
-
-            $moodle_form->addElement('static',
-                                     'turnitin_submitonbehalfof_warning',
-                                     'Turnitin warning',
-                                     '<div class="alert">Turnintin will not allow work to be submitted on behalf of others, so be sure to let your users know this will not be possible.</div>'
-            );
-        }
-
-
-
-        // We also need to prevent the option being enabled if groups are enabled
-        $moodle_form->disabledIf('plagiarism_show_student_report', 'use_groups', 'eq', '1');
-
-        plagiarism_get_form_elements_module($moodle_form, $course_context);
     }
 
     /**

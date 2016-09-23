@@ -619,20 +619,7 @@ class coursework extends table_base {
 
         require_once($CFG->dirroot. '/repository/lib.php');
 
-        $turnitinenabled = false;
-        if ($CFG->enableplagiarism) {
-            $plagiarismsettings = (array)get_config('plagiarism');
-            if (!empty($plagiarismsettings['turnitin_use'])) {
-                $params = array(
-                    'cm' => $this->get_coursemodule_id(),
-                    'name' => 'use_turnitin',
-                    'value' => 1
-                );
-                if ($DB->record_exists('plagiarism_turnitin_config', $params)) {
-                    $turnitinenabled = true;
-                }
-            }
-        }
+        $turnitinenabled = $this->tii_enabled();
 
         // Turn it in only allows one file.
         $max_files = $turnitinenabled ? 1 : $this->maxfiles;
@@ -2357,4 +2344,27 @@ class coursework extends table_base {
 
     }
 
+    /** Function to check it Turnitin is enabled for the particular coursework
+     * @return bool
+     * @throws \dml_exception
+     */
+    public function tii_enabled(){
+
+        global $CFG, $DB;
+        $turnitinenabled = false;
+        if ($CFG->enableplagiarism) {
+            $plagiarismsettings = (array)get_config('plagiarism');
+            if (!empty($plagiarismsettings['turnitin_use'])) {
+                $params = array(
+                    'cm' => $this->get_coursemodule_id(),
+                    'name' => 'use_turnitin',
+                    'value' => 1
+                );
+                if ($DB->record_exists('plagiarism_turnitin_config', $params)) {
+                    $turnitinenabled = true;
+                }
+            }
+        }
+        return $turnitinenabled;
+    }
 }

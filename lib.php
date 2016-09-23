@@ -271,21 +271,30 @@ function coursework_update_instance($coursework) {
         $oldgeneraldeadline != $coursework->generalfeedback ||
         $oldindividualdeadline != $coursework->individualfeedback) {
 
-        // Fire an event so that cron will send emails to students affected by any deadline change.
-        $eventdata = new stdClass();
-        $eventdata->courseworkid = $coursework->id;
+        // Fire an event to send emails to students affected by any deadline change.
 
-        $eventdata->oldsubmissiondeadline = $oldsubmissiondeadline;
-        $eventdata->newsubmissionsdeadline = $coursework->deadline;
-        $eventdata->oldgeneraldeadline = $oldgeneraldeadline;
-        $eventdata->newgeneraldeadline = $coursework->generalfeedback;
-        $eventdata->oldindividualdeadline = $oldindividualdeadline;
-        $eventdata->newindividualdeadline = $coursework->individualfeedback;
+        $courseworkobj = coursework::find($coursework->id);
 
-        $eventdata->userfrom = $USER->id;
 
-        events_trigger('coursework_deadline_changed', $eventdata);
+        $params = array(
+            'context' => context_module::instance($courseworkobj->get_course_module()->id),
+            'courseid' => $courseworkobj->get_course()->id,
+            'objectid' => $coursework->id,
+            'other' => array(
+                'courseworkid' =>  $coursework->id,
+                'oldsubmissiondeadline' => $oldsubmissiondeadline,
+                'newsubmissionsdeadline' => $coursework->deadline,
+                'oldgeneraldeadline' => $oldgeneraldeadline,
+                'newgeneraldeadline' => $coursework->generalfeedback,
+                'oldindividualdeadline' => $oldindividualdeadline,
+                'newindividualdeadline' => $coursework->individualfeedback,
+                'userfrom' => $USER->id,
+            )
+        );
 
+
+        $event = \mod_coursework\event\coursework_deadline_changed::create($params);
+        $event->trigger();
 
     }
 
@@ -622,7 +631,7 @@ function coursework_extend_settings_navigation(settings_navigation $settings, na
 /**
  * Auto-allocates after a new student or teacher is added to a coursework.
  *
- * @param stdClass $roleassignment Full record from role_assignments table
+ * @param $roleassignment - record from role_assignments table
  * @return bool
  */
 function coursework_role_assigned_event_handler($roleassignment) {
@@ -786,22 +795,22 @@ function coursework_get_current_max_feedbacks($courseworkid) {
 /**
  * Sends a message to a user that the deadline has now altered. Fired by the event system.
  *
- * @param stdClass $eventdata
+ * @param  $eventdata
  * @return bool
  * @throws coding_exception
  */
 function coursework_send_deadline_changed_emails($eventdata) {
 
-    if (empty($eventdata->courseworkid)) {
+    if (empty($eventdata->other['courseworkid'])) {
         return true;
     }
 
     // No need to send emails if none of the deadlines have changed.
 
-    echo 'Starting to send Coursework deadline changed emails...';
+   // echo 'Starting to send Coursework deadline changed emails...';
     $counter = 0;
 
-    $coursework = coursework::find($eventdata->courseworkid);
+    $coursework = coursework::find($eventdata->other['courseworkid']);
 
     if (empty($coursework)) {
         return true;
@@ -809,9 +818,9 @@ function coursework_send_deadline_changed_emails($eventdata) {
 
     $users = $coursework->get_students();
 
-    $submissionsdeadlinechanged = $eventdata->oldsubmissiondeadline != $eventdata->newsubmissionsdeadline;
-    $generaldeadlinechanged = $eventdata->oldgeneraldeadline != $eventdata->newgeneraldeadline;
-    $individualdeadlinechanged = $eventdata->oldindividualdeadline != $eventdata->newindividualdeadline;
+    $submissionsdeadlinechanged = $eventdata->other['oldsubmissiondeadline'] != $eventdata->other['newsubmissionsdeadline'];
+    $generaldeadlinechanged = $eventdata->other['oldgeneraldeadline'] != $eventdata->other['newgeneraldeadline'];
+    $individualdeadlinechanged = $eventdata->other['oldindividualdeadline'] != $eventdata->other['newindividualdeadline'];
 
     foreach ($users as $user) {
 
@@ -839,7 +848,7 @@ function coursework_send_deadline_changed_emails($eventdata) {
         $messagedata = new stdClass();
         $messagedata->component = 'mod_coursework';
         $messagedata->name = 'deadlinechanged';
-        $messagedata->userfrom = is_object($eventdata->userfrom) ? $eventdata->userfrom : (int)$eventdata->userfrom;
+        $messagedata->userfrom = is_object($eventdata->other['userfrom']) ? $eventdata->other['userfrom'] : (int)$eventdata->other['userfrom'];
         $messagedata->userto = (int)$user->id;
         $messagedata->subject = get_string('adeadlinehaschangedemailsubject', 'mod_coursework', $coursework->name);
 
@@ -881,7 +890,7 @@ function coursework_send_deadline_changed_emails($eventdata) {
         message_send($messagedata);
     }
 
-    echo 'Sent '.$counter.' messages.';
+   // echo 'Sent '.$counter.' messages.';
 
     return true;
 }
@@ -988,9 +997,9 @@ function mod_coursework_grading_areas_list() {
 function coursework_mod_updated($event_data) {
     global $DB;
 
-    if ($event_data->modulename == 'coursework') {
-        $module = $DB->get_record('course_modules', array('id' => $event_data->cmid));
-        $coursework = coursework::find($module->instance);
+    if ($event_data->other['modulename'] == 'coursework') {
+
+        $coursework = coursework::find($event_data->other['instanceid']);
         /**
          * @var coursework $coursework
          */
@@ -1000,3 +1009,43 @@ function coursework_mod_updated($event_data) {
 
     return true;
 }
+
+
+/**
+ * @param $course_module_id
+ * @return string
+ */
+ function plagiarism_similarity_information($course_module) {
+    $html = '';
+
+    ob_start();
+    echo   plagiarism_print_disclosure($course_module->id);
+    $html .= ob_get_clean();
+
+    return $html;
+}
+
+/**
+ * @return bool
+ */
+function has_user_seen_tii_EULA_agreement(){
+    global $CFG, $DB, $USER;
+
+    // if TII plagiarism enabled check if user agreed/disagreed EULA
+    $shouldseeEULA = false;
+    if ($CFG->enableplagiarism) {
+        $plagiarismsettings = (array)get_config('plagiarism');
+        if (!empty($plagiarismsettings['turnitin_use'])) {
+
+            $sql = "SELECT * FROM {turnitintooltwo_users}
+                 WHERE userid = :userid
+                 and user_agreement_accepted <> 0";
+
+            $shouldseeEULA = $DB->record_exists_sql($sql, array('userid'=>$USER->id));
+        }
+    }   else {
+        $shouldseeEULA = true;
+    }
+    return $shouldseeEULA;
+}
+
