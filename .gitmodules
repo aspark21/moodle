@@ -1,0 +1,128 @@
+[submodule "mod/subpage"]
+	path = mod/subpage
+	url = git://github.com/moodleou/moodle-mod_subpage
+	branch = master
+[submodule "mod/forumng"]
+	path = mod/forumng
+	url = git://github.com/moodleou/moodle-mod_forumng
+	branch = master
+[submodule "mod/ouwiki"]
+	path = mod/ouwiki
+	url = git://github.com/moodleou/moodle-mod_ouwiki
+	branch = master
+[submodule "mod/oublog"]
+	path = mod/oublog
+	url = git://github.com/moodleou/moodle-mod_oublog
+	branch = master
+[submodule "mod/bootstrapelements"]
+	path = mod/bootstrapelements
+	url = https://bitbucket.org/bcu/moodle-mod_bootstrapelements.git
+	branch = master
+[submodule "mod/certificate"]
+	path = mod/certificate
+	url = git://github.com/markn86/moodle-mod_certificate
+	branch = master
+[submodule "mod/lightboxgallery"]
+	path = mod/lightboxgallery
+	url = git://github.com/netspotau/moodle-mod_lightboxgallery
+	branch = master
+[submodule "mod/mediagallery"]
+	path = mod/mediagallery
+	url = git://github.com/netspotau/moodle-mod_mediagallery
+	branch = master
+[submodule "mod/questionnaire"]
+	path = mod/questionnaire
+	url = git://github.com/PoetOS/moodle-mod_questionnaire
+	branch = master
+[submodule "mod/choicegroup"]
+	path = mod/choicegroup
+	url = git://github.com/ndunand/moodle-mod_choicegroup.git
+	branch = master
+[submodule "blocks/course_contents"]
+	path = blocks/course_contents
+	url = https://github.com/mudrd8mz/moodle-block_course_contents
+	branch = master
+[submodule "blocks/panopto"]
+	path = blocks/panopto
+	url = git://github.com/Panopto/Moodle-2.0-plugin-for-Panopto
+	branch = master
+[submodule "lib/editor/atto/plugins/htmlplus"]
+	path = lib/editor/atto/plugins/htmlplus
+	url = git://github.com/andrewnicols/moodle-atto_htmlplus.git
+	branch = master
+[submodule "lib/editor/atto/plugins/fullscreen"]
+	path = lib/editor/atto/plugins/fullscreen
+	url = git://github.com/dthies/moodle-atto_fullscreen.git
+	branch = master
+[submodule "lib/editor/atto/plugins/preview"]
+	path = lib/editor/atto/plugins/preview
+	url = git://github.com/dthies/moodle-atto_preview
+	branch = master
+[submodule "lib/editor/atto/plugins/bsgrid"]
+	path = lib/editor/atto/plugins/bsgrid
+	url = git://github.com/academic-moodle-cooperation/moodle-atto_bsgrid
+	branch = master
+[submodule "lib/editor/atto/plugins/fontsize"]
+	path = lib/editor/atto/plugins/fontsize
+	url = git://github.com/andrewnicols/moodle-atto_fontsize
+	branch = master
+[submodule "lib/editor/atto/plugins/fontfamily"]
+	path = lib/editor/atto/plugins/fontfamily
+	url = git://github.com/projectestac/moodle-atto_fontfamily
+	branch = master
+[submodule "lib/editor/atto/plugins/pastespecial"]
+	path = lib/editor/atto/plugins/pastespecial
+	url = git://github.com/jinhofer/pastespecial.git
+	branch = master
+[submodule "lib/editor/atto/plugins/panoptobutton"]
+	path = lib/editor/atto/plugins/panoptobutton
+	url = git://github.com/Panopto/Panopto-Button-for-Atto
+	branch = master
+[submodule "lib/editor/atto/plugins/mediagallery"]
+	path = lib/editor/atto/plugins/mediagallery
+	url = git://github.com/netspotau/moodle-atto_mediagallery
+	branch = master
+[submodule "filter/mediagallery"]
+	path = filter/mediagallery
+	url = git://github.com/netspotau/moodle-filter_mediagallery
+	branch = master
+[submodule "local/analytics"]
+	path = local/analytics
+	url = git://github.com/DBezemer/moodle-local_analytics
+	branch = master
+[submodule "local/ousearch"]
+	path = local/ousearch
+	url = git://github.com/moodleou/moodle-local_ousearch
+	branch = master
+[submodule "local/ltiprovider"]
+	path = local/ltiprovider
+	url = git://github.com/jleyva/moodle-local_ltiprovider
+	branch = MOODLE_29_STABLE
+[submodule "course/format/topcoll"]
+	path = course/format/topcoll
+	url = git://github.com/gjb2048/moodle-format_topcoll
+	branch = master
+[submodule "course/format/onetopic"]
+	path = course/format/onetopic
+	url = git://github.com/davidherney/moodle-format_onetopic
+	branch = master
+[submodule "question/type/combined"]
+	path = question/type/combined
+	url = git://github.com/moodleou/moodle-qtype_combined
+	branch = master
+[submodule "question/type/oumultiresponse"]
+	path = question/type/oumultiresponse
+	url = git://github.com/moodleou/moodle-qtype_oumultiresponse
+	branch = master
+[submodule "question/type/pmatch"]
+	path = question/type/pmatch
+	url = git://github.com/moodleou/moodle-qtype_pmatch
+	branch = master
+[submodule "question/type/varnumericset"]
+	path = question/type/varnumericset
+	url = git://github.com/moodleou/moodle-qtype_varnumericset
+	branch = master
+[submodule "question/type/varnumeric"]
+	path = question/type/varnumeric
+	url = git://github.com/moodleou/moodle-qtype_varnumeric
+	branch = master
