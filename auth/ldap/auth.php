@@ -910,6 +910,12 @@ class auth_plugin_ldap extends auth_plugin_base {
 
                     // Update system roles, if needed.
                     $this->sync_roles($user);
+
+                    if ($xcount++ > $maxxcount) {
+                        $transaction->allow_commit();
+                        $transaction = $DB->start_delegated_transaction();
+                        $xcount = 0;
+                    }
                 }
                 $transaction->allow_commit();
                 unset($users); // free mem
