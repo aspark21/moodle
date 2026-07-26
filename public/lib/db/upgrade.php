@@ -1691,11 +1691,7 @@ function xmldb_main_upgrade($oldversion) {
     if ($oldversion < 2026011600.01) {
         // Remove activity_modules block.
 
-        if (!file_exists($CFG->dirroot . "/blocks/activity_modules/version.php")) {
-            uninstall_plugin('block', 'activity_modules');
-            // Delete all the admin preset plugin references to activity_modules.
-            $DB->delete_records('adminpresets_plug', ['plugin' => 'block', 'name' => 'activity_modules']);
-        }
+
 
         // Main savepoint reached.
         upgrade_main_savepoint(true, 2026011600.01);
