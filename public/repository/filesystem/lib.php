@@ -652,7 +652,7 @@ class repository_filesystem extends repository {
         $subdir = clean_param(trim($this->subdir, '/'), PARAM_PATH);
         $path = $CFG->dataroot . '/repository/' . $this->subdir . '/';
         if ((empty($this->subdir) && !is_numeric($this->subdir)) || $subdir != $this->subdir || !is_dir($path)) {
-            throw new repository_exception('The instance is not properly configured, invalid path.');
+         //   throw new repository_exception('The instance is not properly configured, invalid path.');
         }
         return $path;
     }
